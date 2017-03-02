@@ -1,0 +1,18 @@
+<assembly>
+    <id>bin</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <files>
+        <file>
+            <source>target/${project.artifactId}-${project.version}-jar-with-dependencies.jar</source>
+            <outputDirectory>/lib</outputDirectory>
+            <destName>${project.artifactId}-${project.version}-jar-with-dependencies.jar</destName>
+        </file>
+
+
+    </files>
+
+</assembly>
