@@ -18,6 +18,7 @@ import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
 import org.apache.spark.api.java.JavaRDD
 import org.slf4j.{Logger, LoggerFactory}
+import util.control.Breaks._
 
 
 
@@ -64,7 +65,7 @@ object GetSummary extends Serializable{
     logger.info(configuration.summary)
     logger.info("Creating spark context")
     val spark = GannettContext.createSparkSession(configuration)
-    val df = if(partitionColumn.length > 1) {
+    val df = if(!partitionColumn.isEmpty) {
       val parValue = configuration.partitionValue.get.get
       destinationPath = destinationPath+"/"+partitionColumn+"="+parValue
       spark.sql("select * from "+tableName+" where "+partitionColumn+"="+parValue)
@@ -109,16 +110,21 @@ object GetSummary extends Serializable{
 
   def continuousVariableStat(tableName:String,continuousVar:String,configuration: ProcessorConfiguration, df:Dataset[Row], spark:SparkSession): JSONObject = {
     val json = new JSONObject()
-    if(continuousVar.length<1) {
+    if(continuousVar.isEmpty) {
         return json
     }
     val arrC = continuousVar.split(",")
 
     for(v <- arrC) {
-      val tempjson = new JSONObject
-      tempjson.put("Con", getContinuousVariableStats(spark,tableName,v,df))
-      tempjson.put("Outlier",findOutlier(spark,tableName,v,df))
-      json.put(v,tempjson)
+      breakable {
+        if (v.isEmpty) {
+          break
+        }
+        val tempjson = new JSONObject
+        tempjson.put("Con", getContinuousVariableStats(spark, tableName, v, df))
+        tempjson.put("Outlier", findOutlier(spark, tableName, v, df))
+        json.put(v, tempjson)
+      }
     }
     json
   }
@@ -127,16 +133,21 @@ object GetSummary extends Serializable{
 
 
     val json = new JSONObject()
-    if(discreteVar.length<1) {
+    if(discreteVar.isEmpty) {
       return json
     }
     val arrD = discreteVar.split(",")
 
     for(v <- arrD) {
-      val tempjson = new JSONObject
+      breakable {
+        if (v.isEmpty) {
+          break
+        }
+        val tempjson = new JSONObject
 
-      tempjson.put(v, getDiscreteVariableStats(spark,tableName,v,df))
-      json.put(v,tempjson)
+        tempjson.put(v, getDiscreteVariableStats(spark, tableName, v, df))
+        json.put(v, tempjson)
+      }
     }
 
     json
@@ -147,16 +158,21 @@ object GetSummary extends Serializable{
 
     val json = new JSONObject()
 
-    if(discreteBinaryVar.length<1) {
+    if(discreteBinaryVar.isEmpty) {
       return json
     }
 
     val arrD = discreteBinaryVar.split(",")
     for(v <- arrD) {
-      val tempjson = new JSONObject
+      breakable {
+        if (v.isEmpty) {
+          break
+        }
+        val tempjson = new JSONObject
 
-      tempjson.put(v, getBinaryDiscreteVariableStats(spark,tableName,v,df))
-      json.put(v,tempjson)
+        tempjson.put(v, getBinaryDiscreteVariableStats(spark, tableName, v, df))
+        json.put(v, tempjson)
+      }
     }
 
     json

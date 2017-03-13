@@ -14,7 +14,7 @@ class ProcessorConfiguration(arguments: Seq[String])  extends ScallopConf(argume
 
   val forDate = opt[String](required = false, default = Some(new DateTime().toString("yyyy-MM-dd")) , descr = "Date to process in the format YYYY-mm-dd such as 2016-07-05, default is today ")
   val filePath = opt[String](required = true, descr = "Path to the properties file ")
-  val partitionValue = opt[String](required = false, descr = "Partition value to fetch it the table is paritioned")
+  val partitionValue = opt[String](required = false, descr = "Partition value to fetch if the table is paritioned")
 
   banner("""Usage: GetSummary
            | Options:

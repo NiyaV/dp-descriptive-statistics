@@ -142,7 +142,9 @@ object Functions extends Serializable {
     val valueAndCount = joinedrdd.join(countRdd)
 
 
-
+    /*
+     * RDD of type JSONObject is created - Each Stat is put as key and its value is put in Value
+     */
     val jsonrdd = valueAndCount.map(x => {
       val jsontemp1 = new JSONObject()
       val ww = x._2._1._1
