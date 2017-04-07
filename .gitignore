@@ -1,0 +1,7 @@
+target/*
+*.idea/*
+*.iml
+classes/*
+/derby.log
+*.DS_Store
+/metastore_db/
