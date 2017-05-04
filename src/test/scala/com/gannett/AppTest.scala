@@ -1,4 +1,4 @@
-package com.gannett
+package com.gannett.test
 
 import com.gannett.udf.Functions
 import org.apache.spark.{SparkConf, SparkContext}

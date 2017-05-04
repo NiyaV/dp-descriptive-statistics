@@ -1,4 +1,4 @@
-package com.gannett
+package com.gannett.test
 import java.util.Date
 
 import com.holdenkarau.spark.testing.{LocalSparkContext, SparkContextProvider}
